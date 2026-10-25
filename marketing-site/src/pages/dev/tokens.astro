@@ -1,0 +1,51 @@
+---
+// Dev-only check that tokens reach both raw CSS variables and Tailwind
+// utilities. Excluded from production in step 0.4 with the kitchen sink.
+import '../../styles/global.css';
+import tokens from '../../../design/tokens.json';
+
+const styles = tokens.type.groups.flatMap((g) => g.styles);
+const themes = ['light', 'dark'] as const;
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Tokens</title>
+  </head>
+  <body>
+    <main class="grid md:grid-cols-2 max-w-width-page mx-auto">
+      {
+        themes.map((theme) => (
+          <section data-theme={theme} class="bg-paper text-ink p-6 flex flex-col gap-6">
+            <p class="eyebrow text-ink-subtle">{theme}</p>
+            <div class="flex flex-wrap gap-2">
+              {tokens.color.tokens.map((c) => (
+                <div class="w-24">
+                  <div class="h-10 rounded-control border border-rule" style={`background: var(--${c.name})`} />
+                  <p class="meta text-ink-muted">{c.name}</p>
+                </div>
+              ))}
+            </div>
+            <div class="flex flex-col gap-4">
+              {styles.map((s) => (
+                <p class={s.name}>{s.sample}</p>
+              ))}
+            </div>
+            <div class="bg-paper-raised rounded-card shadow-raise p-6 max-w-width-prose">
+              <p class="body-s text-ink-muted">Card: bg-paper-raised, rounded-card, shadow-raise, p-6.</p>
+              <a class="label text-nudge-deep underline" href="#">A link in nudge-deep</a>
+            </div>
+            <div class="bg-product-surface text-product-ink rounded-card shadow-frame p-6">
+              <p class="product-title">Triage board</p>
+              <p class="product-body text-product-muted">Product tokens stay light in both themes.</p>
+            </div>
+          </section>
+        ))
+      }
+    </main>
+  </body>
+</html>

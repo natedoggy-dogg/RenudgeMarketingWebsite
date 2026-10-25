@@ -9,3 +9,6 @@ dist/
 # Internal product docs. This repo is public until the site moves into the
 # product monorepo, so keep them local. Remove this line after the move.
 docs/source/
+
+# Generated from design/tokens.json by scripts/build-tokens.ts
+src/styles/tokens.css

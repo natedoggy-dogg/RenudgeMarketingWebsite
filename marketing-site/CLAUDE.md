@@ -5,7 +5,8 @@ The public website for renudge.it: Astro, static output, served by the `renudge-
 ## Read first
 
 - `design/README.md` (copied from the design system) is the brand book. Its rules on colour, the highlighter, product mockups and voice are binding.
-- `design/tokens.json` is the only source of design values. `src/styles/tokens.css` is generated from it, so don't edit it by hand.
+- `design/tokens.json` is the only source of design values. `src/styles/tokens.css` is generated from it (and gitignored), so don't edit it by hand.
+- Tailwind utilities come from the tokens only; the default palette is switched off. Colours drop nothing (`bg-paper`, `text-ink-muted`, `bg-product-surface`), spacing, radius and shadow drop their prefix (`p-6`, `rounded-card`, `shadow-frame`), and layout widths keep the full name (`max-w-width-prose`) because Tailwind's own `max-w-prose` is 65ch. Type styles are plain classes named after the token (`display-xl`, `lede`, `eyebrow`).
 - `docs/source/` holds the copy draft, personas, use cases and product docs.
 
 ## Where things live
@@ -54,6 +55,8 @@ Fill these in once Phase 0 is built:
 
 - dev: `npm run dev` (Node 24, see `.nvmrc`)
 - build: `npm run build` (type check, then `astro build`)
+- tokens: `npm run tokens` (runs automatically before `dev` and `build`)
+- tests: `npm test`
 - checks:
 - preview the Worker locally:
 - deploy staging: CI on push to `main`

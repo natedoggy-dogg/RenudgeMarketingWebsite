@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 28px;
+    -webkit-font-smoothing: antialiased;
+  }
+}
