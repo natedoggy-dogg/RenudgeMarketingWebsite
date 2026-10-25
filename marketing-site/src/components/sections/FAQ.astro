@@ -1,0 +1,68 @@
+---
+// Question and answer rows. Emits FAQPage JSON-LD from the same items it
+// renders, so the copy and the structured data can't diverge. Answers start
+// with "Yes" or "No" where they can.
+import { faqPage } from '../../lib/schema';
+
+interface Props {
+  items: { question: string; answer: string }[];
+  /** Index of a row to render open. */
+  open?: number;
+  /** Set false when the page already emits FAQPage for these items. */
+  schema?: boolean;
+}
+const { items, open, schema = true } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item, i) => (
+      <details open={i === open}>
+        <summary>{item.question}</summary>
+        <p>{item.answer}</p>
+      </details>
+    ))
+  }
+</div>
+{schema && <script type="application/ld+json" set:html={JSON.stringify(faqPage(items))} />}
+
+<style>
+  .faq {
+    max-width: var(--width-prose);
+    border-bottom: 1px solid var(--rule);
+  }
+  details {
+    border-top: 1px solid var(--rule);
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: 600;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    font-family: var(--font-mono);
+    font-weight: 400;
+    color: var(--ink-subtle);
+  }
+  details[open] summary::after {
+    content: '–';
+  }
+  p {
+    margin: 0;
+    padding: 0 0 18px;
+    color: var(--ink-muted);
+    font-size: 16px;
+    line-height: 26px;
+    max-width: 60ch;
+  }
+</style>

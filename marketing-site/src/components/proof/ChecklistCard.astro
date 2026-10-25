@@ -1,0 +1,142 @@
+---
+// The full checklist on a template page: every item, never behind a signup.
+// Items come from the library adapter in the client's wording; the head count
+// is derived from the rows.
+import Chip from '../labels/Chip.astro';
+
+export interface ChecklistItem {
+  label: string;
+  instruction?: string;
+  kind: string;
+  dataType?: string;
+  required: boolean;
+}
+interface Props {
+  title: string;
+  items: ChecklistItem[];
+  level?: 'h2' | 'h3';
+}
+const { title, items, level: Heading = 'h3' } = Astro.props;
+
+// How each kind is counted in the head. Unknown kinds count as "items".
+const NOUNS: Record<string, [string, string]> = {
+  document: ['document', 'documents'],
+  answer: ['question', 'questions'],
+  signature: ['signature', 'signatures'],
+};
+const counts = new Map<string, number>();
+for (const i of items) {
+  const key = i.kind.toLowerCase() in NOUNS ? i.kind.toLowerCase() : 'other';
+  counts.set(key, (counts.get(key) ?? 0) + 1);
+}
+const summary = [...counts]
+  .map(([k, n]) => {
+    const [one, many] = NOUNS[k] ?? ['item', 'items'];
+    return `${n} ${n === 1 ? one : many}`;
+  })
+  .join(' · ');
+const chip = (i: ChecklistItem) => {
+  const kind = i.kind.charAt(0).toUpperCase() + i.kind.slice(1);
+  return i.dataType ? `${kind} · ${i.dataType}` : kind;
+};
+---
+
+<section class="checklist">
+  <div class="head">
+    <Heading>{title}</Heading>
+    <span class="eyebrow count">{summary}</span>
+  </div>
+  <ul>
+    {
+      items.map((i) => (
+        <li class="item">
+          <div>
+            <div class="t">{i.label}</div>
+            {i.instruction && <div class="d">{i.instruction}</div>}
+          </div>
+          <div class="tags">
+            <Chip label={chip(i)} />
+            <span class="req">{i.required ? 'required' : 'optional'}</span>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .checklist {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+  }
+  .head {
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-4);
+  }
+  h2,
+  h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+  .count {
+    color: var(--ink-subtle);
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    padding: 14px var(--space-6);
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .item:first-child {
+    border-top: 0;
+  }
+  .t {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+  .d {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--ink-muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .req {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--ink-subtle);
+  }
+  @media (max-width: 720px) {
+    .head,
+    .item {
+      padding-left: var(--space-4);
+      padding-right: var(--space-4);
+    }
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+  }
+</style>

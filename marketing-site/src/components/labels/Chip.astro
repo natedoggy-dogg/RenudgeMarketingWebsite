@@ -1,0 +1,30 @@
+---
+// Neutral mono tag for channels (Email, SMS, Portal chat) and task kinds
+// (Document, Answer, Signature).
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<span class="chip">{label}</span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--rule);
+    color: var(--ink-muted);
+    background: var(--paper-raised);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+// The closing call to action on the page's one night band. The supporting
+// line states the size of the next step, not a benefit recap.
+import Button from '../actions/Button.astro';
+import type { Cta } from '../types';
+
+interface Props {
+  headline: string;
+  line: string;
+  primary: Cta;
+  secondary?: Cta;
+}
+const { headline, line, primary, secondary } = Astro.props;
+---
+
+<section class="cta">
+  <h2>{headline}</h2>
+  <p>{line}</p>
+  <div class="actions">
+    <Button href={primary.href}>{primary.label}</Button>
+    {secondary && <Button href={secondary.href} variant="secondary" onNight>{secondary.label}</Button>}
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--night);
+    color: var(--on-night);
+    border-radius: var(--radius-card);
+    padding: var(--space-16) var(--space-12);
+  }
+  h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 52px;
+    line-height: 58px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    max-width: 16ch;
+  }
+  p {
+    margin: var(--space-4) 0 0;
+    color: var(--on-night-muted);
+    font-size: 18px;
+    line-height: 28px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  @media (max-width: 720px) {
+    .cta {
+      padding: var(--space-12) var(--space-6);
+    }
+    h2 {
+      font-size: 36px;
+      line-height: 42px;
+    }
+  }
+</style>

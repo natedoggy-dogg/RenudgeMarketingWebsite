@@ -1,0 +1,73 @@
+---
+// Two columns for the two personas, never blended: the practitioner (time and
+// tedium) on the left, the buyer (money, visibility, audit) on the right.
+// Once per page at most.
+interface Column {
+  eyebrow: string;
+  headline: string;
+  body: string;
+}
+interface Props {
+  practitioner: Column;
+  buyer: Column;
+  level?: 'h2' | 'h3';
+}
+const { practitioner, buyer, level: Heading = 'h3' } = Astro.props;
+---
+
+<div class="two">
+  {
+    [practitioner, buyer].map((c) => (
+      <div>
+        <span class="eyebrow">{c.eyebrow}</span>
+        <Heading>{c.headline}</Heading>
+        <p>{c.body}</p>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .two {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+  .two > div {
+    padding: var(--space-6) var(--space-6) var(--space-6) 0;
+  }
+  .two > div + div {
+    border-left: 1px solid var(--rule);
+    padding-left: var(--space-6);
+  }
+  .eyebrow {
+    color: var(--ink-subtle);
+  }
+  h2,
+  h3 {
+    margin: var(--space-3) 0 0;
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+  p {
+    margin: var(--space-3) 0 0;
+    color: var(--ink-muted);
+    font-size: 16px;
+    line-height: 26px;
+  }
+  @media (max-width: 720px) {
+    .two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .two > div {
+      padding-right: 0;
+    }
+    .two > div + div {
+      border-left: 0;
+      border-top: 1px solid var(--rule);
+      padding-left: 0;
+    }
+  }
+</style>

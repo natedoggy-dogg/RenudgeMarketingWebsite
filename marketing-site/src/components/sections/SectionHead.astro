@@ -1,0 +1,57 @@
+---
+// Opens a section: hairline, a mono eyebrow in a 64px margin column, the
+// display-m headline and an optional muted intro. Headline ≤ 12 words, intro
+// ≤ 60ch. Numbers ("02") on long top-to-bottom pages, labels elsewhere.
+interface Props {
+  eyebrow: string;
+  headline: string;
+  intro?: string;
+  level?: 'h2' | 'h3';
+  id?: string;
+}
+const { eyebrow, headline, intro, level: Heading = 'h2', id } = Astro.props;
+---
+
+<div class="section-head">
+  <span class="eyebrow">{eyebrow}</span>
+  <Heading class="display-m" id={id}>{headline}</Heading>
+  {intro && <p>{intro}</p>}
+</div>
+
+<style>
+  .section-head {
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-4);
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    column-gap: var(--space-6);
+    row-gap: var(--space-4);
+  }
+  .eyebrow {
+    padding-top: 4px;
+    color: var(--ink-subtle);
+  }
+  h2,
+  h3,
+  p {
+    margin: 0;
+    grid-column: 2;
+  }
+  p {
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+  @media (max-width: 720px) {
+    .section-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .eyebrow {
+      padding-top: 0;
+    }
+    h2,
+    h3,
+    p {
+      grid-column: 1;
+    }
+  }
+</style>

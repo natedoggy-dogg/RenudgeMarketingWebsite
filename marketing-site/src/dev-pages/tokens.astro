@@ -1,8 +1,8 @@
 ---
 // Dev-only check that tokens reach both raw CSS variables and Tailwind
 // utilities. Excluded from production in step 0.4 with the kitchen sink.
-import '../../styles/global.css';
-import tokens from '../../../design/tokens.json';
+import '../styles/global.css';
+import tokens from '../../design/tokens.json';
 
 const styles = tokens.type.groups.flatMap((g) => g.styles);
 const themes = ['light', 'dark'] as const;

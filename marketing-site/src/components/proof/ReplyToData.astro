@@ -1,0 +1,217 @@
+---
+// The signature visual: the operator's ask, the client's casual reply with the
+// extracted values highlighted, and the fields they landed in. Always a
+// fictional operator. A value that would overwrite a committed one is
+// `staged`, shown with the warning badge instead of "confirmed".
+//
+// Motion: the highlighter sweeps across each value, then its field appears.
+// Without JS or under reduced motion, the end state shows.
+import MarkedText from './MarkedText.astro';
+import Badge from '../labels/Badge.astro';
+import type { MarkedText as Marked } from '../types';
+
+interface Field {
+  label: string;
+  value: string;
+  provenance: string;
+  staged?: boolean;
+}
+interface Props {
+  channel: string;
+  operator: string;
+  client: string;
+  ask: string;
+  reply: Marked;
+  fields: Field[];
+}
+const { channel, operator, client, ask, reply, fields } = Astro.props;
+---
+
+<figure class="r2d" data-r2d>
+  <div class="thread">
+    <figcaption class="eyebrow">{channel} · {operator} ↔ {client}</figcaption>
+    <p class="bubble out"><span class="sr-only">{operator}: </span>{ask}</p>
+    <p class="bubble in">
+      <span class="sr-only">{client}: </span><MarkedText text={reply} />
+    </p>
+  </div>
+  <div class="arrow" aria-hidden="true"></div>
+  <dl class="fields">
+    {
+      fields.map((f, i) => (
+        <div class="field" style={`--i: ${i}`}>
+          <dt class="k">{f.label}</dt>
+          <dd class="v">{f.value}</dd>
+          <dd class="m">
+            {f.provenance} · {f.staged ? <Badge label="staged · waiting for you" tone="warning" /> : 'confirmed'}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</figure>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          (e.target as HTMLElement).dataset.state = 'play';
+          io.unobserve(e.target);
+        }
+      },
+      { threshold: 0.5 },
+    );
+    for (const el of document.querySelectorAll<HTMLElement>('[data-r2d]')) {
+      el.dataset.state = 'armed';
+      io.observe(el);
+    }
+  }
+</script>
+
+<style>
+  .r2d {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-4);
+    margin: 0;
+  }
+  .thread {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .eyebrow {
+    color: var(--ink-subtle);
+  }
+  .bubble {
+    margin: 0;
+    align-self: flex-start;
+    max-width: 300px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border-top-left-radius: 4px;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    font-size: 15px;
+    line-height: 22px;
+  }
+  .out {
+    align-self: flex-end;
+    border-radius: 14px;
+    border-top-right-radius: 4px;
+    background: var(--nudge-wash);
+    border-color: transparent;
+    color: var(--ink);
+  }
+  .arrow {
+    height: 1px;
+    background: var(--rule-strong);
+    position: relative;
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    border: 4.5px solid transparent;
+    border-left: 7px solid var(--rule-strong);
+    border-right: 0;
+  }
+  .fields {
+    margin: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-raise);
+  }
+  .field {
+    padding: 12px 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .field:first-child {
+    border-top: 0;
+  }
+  dd {
+    margin: 0;
+  }
+  .k {
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ink-muted);
+  }
+  .v {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .m {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ink-subtle);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Motion: set up by the script only when motion is allowed. */
+  .r2d :global(mark) {
+    background-image: linear-gradient(var(--highlight), var(--highlight));
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  .r2d[data-state='armed'] :global(mark),
+  .r2d[data-state='play'] :global(mark) {
+    background-color: transparent;
+  }
+  .r2d[data-state='armed'] :global(mark) {
+    background-size: 0% 100%;
+  }
+  .r2d[data-state='play'] :global(mark) {
+    animation: sweep 300ms ease-out both;
+  }
+  .r2d[data-state='armed'] .field {
+    opacity: 0;
+  }
+  .r2d[data-state='play'] .field {
+    animation: appear 300ms ease-out both;
+    animation-delay: calc(400ms + var(--i) * 150ms);
+  }
+  @keyframes sweep {
+    from {
+      background-size: 0% 100%;
+    }
+    to {
+      background-size: 100% 100%;
+    }
+  }
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .r2d {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .arrow {
+      display: none;
+    }
+  }
+</style>

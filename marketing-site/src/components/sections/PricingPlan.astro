@@ -1,0 +1,134 @@
+---
+// The plan cards. Prices come from pricing.json, never typed into a page. A
+// null price renders a bracketed placeholder, which the production build
+// rejects. Only the recommended plan gets the primary button.
+import Button from '../actions/Button.astro';
+import type { Cta } from '../types';
+
+export interface Plan {
+  name: string;
+  /** Whole dollars per unit, or null until set. */
+  price: number | null;
+  unit: string;
+  inclusions: string[];
+  cta: Cta;
+  /** Recommended plans are outlined and flagged. The flag must be true: no
+   *  "Most popular" until there's data to say so. */
+  recommended?: { flag: string };
+}
+interface Props {
+  plans: Plan[];
+  level?: 'h2' | 'h3';
+}
+const { plans, level: Heading = 'h3' } = Astro.props;
+const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+
+<div class="plans" style={`--plan-count: ${plans.length}`}>
+  {
+    plans.map((p) => (
+      <div class:list={['plan', p.recommended && 'rec']}>
+        {p.recommended && <span class="flag">{p.recommended.flag}</span>}
+        <Heading>{p.name}</Heading>
+        <div class="price">
+          {p.price === null ? (
+            <span class="tbc">[pricing to come]</span>
+          ) : (
+            <>
+              {fmt.format(p.price)}
+              <small> {p.unit}</small>
+            </>
+          )}
+        </div>
+        <ul>
+          {p.inclusions.map((i) => (
+            <li>{i}</li>
+          ))}
+        </ul>
+        <Button href={p.cta.href} variant={p.recommended ? 'primary' : 'secondary'} class="plan-cta">
+          {p.cta.label}
+        </Button>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(var(--plan-count), minmax(0, 1fr));
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+  .plan {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-raise);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .rec {
+    border: 1.5px solid var(--nudge);
+  }
+  .flag {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--nudge-wash);
+    color: var(--nudge-deep);
+  }
+  h2,
+  h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+  .price {
+    font-family: var(--font-display);
+    font-size: 44px;
+    line-height: 44px;
+  }
+  .tbc {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 44px;
+    color: var(--ink-subtle);
+  }
+  .price small {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink-muted);
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+  li {
+    padding: 6px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .plan :global(.plan-cta) {
+    width: 100%;
+  }
+  @media (max-width: 720px) {
+    .plans {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,353 @@
+---
+// Kitchen sink: every ported component in light and dark, each above the
+// design system's own preview of it. Dev and staging only.
+import { readFileSync } from 'node:fs';
+import { DESIGN_COMPONENTS } from '../lib/paths';
+import Base from '../layouts/Base.astro';
+import Wordmark from '../components/brand/Wordmark.astro';
+import Nav from '../components/brand/Nav.astro';
+import Button from '../components/actions/Button.astro';
+import TextLink from '../components/actions/TextLink.astro';
+import Chip from '../components/labels/Chip.astro';
+import Badge from '../components/labels/Badge.astro';
+import Highlight from '../components/proof/Highlight.astro';
+import ReplyToData from '../components/proof/ReplyToData.astro';
+import MessageThread from '../components/proof/MessageThread.astro';
+import ProductFrame from '../components/proof/ProductFrame.astro';
+import ProductTable from '../components/proof/ProductTable.astro';
+import PhoneFrame from '../components/proof/PhoneFrame.astro';
+import ChecklistCard from '../components/proof/ChecklistCard.astro';
+import CadenceTimeline from '../components/proof/CadenceTimeline.astro';
+import SectionHead from '../components/sections/SectionHead.astro';
+import Hero from '../components/sections/Hero.astro';
+import Steps from '../components/sections/Steps.astro';
+import TwoRegister from '../components/sections/TwoRegister.astro';
+import CTABand from '../components/sections/CTABand.astro';
+import FAQ from '../components/sections/FAQ.astro';
+import PricingPlan from '../components/sections/PricingPlan.astro';
+import VerifiedNote from '../components/sections/VerifiedNote.astro';
+import nav from '../data/nav.json';
+
+// Sample content is the design system's own preview copy. Kitchen sink only.
+
+const DIR = DESIGN_COMPONENTS;
+const card = (name: string) => {
+  const first = readFileSync(new URL(`${name}/preview.html`, DIR), 'utf8').split('\n')[0] ?? '';
+  return {
+    group: first.match(/group="([^"]+)"/)?.[1] ?? '',
+    height: Number(first.match(/height=(\d+)/)?.[1] ?? 200),
+  };
+};
+
+const components = [
+  'Wordmark', 'Nav', 'Button', 'Chip', 'Highlight', 'SectionHead', 'Hero', 'Steps', 'TwoRegister', 'CTABand',
+  'FAQ', 'PricingPlan', 'VerifiedNote', 'ReplyToData', 'MessageThread', 'ProductFrame', 'PhoneFrame',
+  'ChecklistCard', 'CadenceTimeline',
+] as const;
+const themes = ['light', 'dark'] as const;
+---
+
+<Base title="Components" description="Kitchen sink of the ported design-system components." noindex>
+  <div class="sink">
+    <header class="intro">
+      <h1 class="display-l">Components</h1>
+      <p class="lede">Each component in light and dark. Under each port, the design system's own preview, framed at its card size.</p>
+      <nav aria-label="Components">
+        <ul class="toc">
+          {components.map((c) => <li><a href={`#${c}`}>{c}</a></li>)}
+        </ul>
+      </nav>
+    </header>
+
+    {
+      components.map((name) => {
+        const { group, height } = card(name);
+        return (
+          <section class="component" id={name} aria-labelledby={`${name}-h`}>
+            <h2 class="display-s" id={`${name}-h`}>
+              {name} <span class="meta">{group}</span>
+            </h2>
+            {themes.map((theme) => (
+              <div class="pair">
+                <div class="panel" data-theme={theme}>
+                  <p class="eyebrow tag">Port · {theme}</p>
+                  {name === 'Wordmark' && (
+                    <div class="row" style="gap: 48px">
+                      <Wordmark size="lg" />
+                      <Wordmark />
+                    </div>
+                  )}
+                  {name === 'Nav' && (
+                    <Nav links={nav.header} signUpUrl="#" signInUrl="#" menuId={`sink-menu-${theme}`} />
+                  )}
+                  {name === 'Button' && (
+                    <div class="row">
+                      <Button href="#">Start free</Button>
+                      <Button href="#" variant="secondary">Book a walkthrough</Button>
+                      <TextLink href="#">Read our security overview →</TextLink>
+                    </div>
+                  )}
+                  {name === 'Chip' && (
+                    <div class="stack">
+                      <div class="row">
+                        {['Email', 'SMS', 'Portal chat', 'Document', 'Answer'].map((l) => <Chip label={l} />)}
+                      </div>
+                      <div class="row">
+                        <Badge label="complete" tone="success" />
+                        <Badge label="waiting on you" tone="warning" />
+                        <Badge label="stalled" tone="destructive" />
+                        <Badge label="chasing" tone="neutral" />
+                      </div>
+                    </div>
+                  )}
+                  {name === 'Highlight' && (
+                    <p class="body" style="max-width: 52ch">
+                      "hey sorry for the delay — <Highlight>rev was 145k</Highlight> for march, and the address is{' '}
+                      <Highlight>still the same</Highlight>. can I send the statements <Highlight>friday</Highlight>?"
+                    </p>
+                  )}
+                  {name === 'SectionHead' && (
+                    <SectionHead
+                      eyebrow="02"
+                      headline="Every open request is a business you're not closing."
+                      intro="You send the checklist. They open it. Then nothing. A week later you're writing the same email again."
+                    />
+                  )}
+                  {name === 'Hero' && (
+                    <Hero
+                      eyebrow="For mortgage brokers and bookkeepers"
+                      headline="Stop chasing clients for paperwork."
+                      lede="renudge.it follows up by email, text and chat until your clients send what you need, and hands you a clean, organised answer instead of a messy inbox."
+                      primary={{ label: 'Start your first request free', href: '#' }}
+                      secondary={{ label: 'See how it works', href: '#' }}
+                      reassurance="No credit card. Your first requests are on us."
+                    />
+                  )}
+                  {name === 'Steps' && (
+                    <Steps
+                      steps={[
+                        { title: 'Build a checklist once', body: 'Mix document requests with data questions — dates, dollar amounts, yes or no — in one reusable template.' },
+                        { title: "Send it the way they'll open it", body: 'A link by email or text. Clients start on their phone, with no account and nothing to install.' },
+                        { title: 'The follow-up runs itself', body: "Email, then email, then a text, on a schedule you set. It stops the moment they're done." },
+                      ]}
+                    />
+                  )}
+                  {name === 'TwoRegister' && (
+                    <TwoRegister
+                      practitioner={{
+                        eyebrow: 'For the person doing the chasing',
+                        headline: 'A short list, not fifty things to check on.',
+                        body: 'No more tracking who owes what, or retyping a text reply into your system. Your morning starts with the few things that actually need a human.',
+                      }}
+                      buyer={{
+                        eyebrow: 'For the person who owns the outcome',
+                        headline: 'Nothing goes quiet without you knowing why.',
+                        body: "Every open request has a clock on it, and you can see where it's stuck. When the AI can't resolve something, it escalates instead of stalling. Every action is logged.",
+                      }}
+                    />
+                  )}
+                  {name === 'CTABand' && (
+                    <CTABand
+                      headline="Your next client won't have to be chased."
+                      line="Set up your first checklist in minutes."
+                      primary={{ label: 'Start free', href: '#' }}
+                      secondary={{ label: 'Book a walkthrough', href: '#' }}
+                    />
+                  )}
+                  {name === 'FAQ' && (
+                    <FAQ
+                      open={0}
+                      schema={theme === 'light'}
+                      items={[
+                        { question: 'Do I pay for my clients?', answer: "No. Clients never create accounts and are never charged. You're billed for requests you send and messages that go out." },
+                        { question: 'What if a client never responds?', answer: 'The request counts once, whether they finish it or not.' },
+                        { question: 'Which countries can you text?', answer: 'The US at launch. Email works anywhere.' },
+                      ]}
+                    />
+                  )}
+                  {name === 'PricingPlan' && (
+                    <PricingPlan
+                      plans={[
+                        { name: 'Solo', price: null, unit: '/ month', inclusions: ['[NN] active requests a month', '1 team member', 'Unlimited email follow-ups', 'SMS pay-as-you-go'], cta: { label: 'Start free', href: '#' } },
+                        { name: 'Practice', price: null, unit: '/ month', inclusions: ['[NN] active requests a month', 'Up to [NN] team members', 'Audit log export', 'Viewer role'], cta: { label: 'Start free', href: '#' }, recommended: { flag: '[Flag]' } },
+                        { name: 'Firm', price: null, unit: '/ month', inclusions: ['[NN] active requests a month', 'Unlimited team members', 'Dedicated SMS number', 'Priority support'], cta: { label: 'Talk to us', href: '#' } },
+                      ]}
+                    />
+                  )}
+                  {name === 'VerifiedNote' && (
+                    <VerifiedNote
+                      verifiedAt={new Date('2026-10-12')}
+                      source="their pricing page and a hands-on trial"
+                      note="Where shared-drive request links are the better answer: a one-off file from someone who's already motivated to send it. You don't need follow-up for that."
+                    />
+                  )}
+                  {name === 'ReplyToData' && (
+                    <ReplyToData
+                      channel="SMS"
+                      operator="Riverside Mortgages"
+                      client="Priya"
+                      ask="Hi Priya, Riverside Mortgages here. Two things left for your pre-approval: your annual income and your current monthly rent."
+                      reply={['oh right! income is ', { mark: 'about 96k' }, " before tax, rent's ", { mark: '2,150 a month' }]}
+                      fields={[
+                        { label: 'Annual gross income', value: '$96,000', provenance: 'from her text' },
+                        { label: 'Current monthly housing cost', value: '$2,150', provenance: 'from her text' },
+                      ]}
+                    />
+                  )}
+                  {name === 'MessageThread' && (
+                    <MessageThread
+                      turns={[
+                        { time: 'Mon 09:00', channel: 'Email', sender: 'Altogether Ventures', message: 'Hi Alan, we need ten things to finish your onboarding. About 20 minutes, and you can stop whenever you like.' },
+                        { time: 'Thu 09:00', channel: 'Email', sender: 'Altogether Ventures', message: 'Three done, seven to go. Next up is proof of address — a phone bill counts.' },
+                        { time: 'Thu 18:42', channel: 'SMS', sender: 'Alan', message: "does it have to be in my name? the bills are in my partner's" },
+                        { system: 'AI held the reply — no grounded answer, flagged for a person' },
+                      ]}
+                    />
+                  )}
+                  {name === 'ProductFrame' && (
+                    <ProductFrame path="/requests" active="Requests" label="The Requests screen, showing three clients">
+                      <ProductTable
+                        title="Requests"
+                        count="1 needs you · 2 being chased"
+                        columns={['Client', 'Progress', 'State', 'Next nudge']}
+                        rows={[
+                          [{ primary: "Alan O'Neill", sub: 'AML check — new client' }, '3 of 10', { badge: 'waiting on you', tone: 'warning' }, 'paused — in triage'],
+                          [{ primary: 'Priya Shah', sub: 'Mortgage pre-approval' }, '7 of 9', { badge: 'chasing', tone: 'neutral' }, 'tomorrow 09:00 · SMS'],
+                          [{ primary: 'Tom Whelan', sub: 'Monthly bookkeeping close' }, '6 of 6', { badge: 'complete', tone: 'success' }, '—'],
+                        ]}
+                      />
+                    </ProductFrame>
+                  )}
+                  {name === 'PhoneFrame' && (
+                    <PhoneFrame
+                      operator="altogether"
+                      label="Alan's checklist from Altogether Ventures, on his phone"
+                      headline="Hi Alan — Altogether Ventures needs ten things from you"
+                      summary="Four documents, five short questions and one signature, about 20 minutes. Stop whenever you like — nothing is lost."
+                      progress={{ done: 3, total: 10 }}
+                      tasks={[
+                        { state: 'done', title: '3 already sent' },
+                        { state: 'next', title: 'Proof of address', note: 'Dated in the last 90 days', action: 'Upload ›' },
+                        { state: 'later', title: 'Your passport', note: 'Photo page is enough' },
+                        { state: 'later', title: 'Business turnover', note: 'Last financial year' },
+                      ]}
+                    />
+                  )}
+                  {name === 'ChecklistCard' && (
+                    <ChecklistCard
+                      title="Mortgage pre-approval"
+                      items={[
+                        { label: "Last 3 months' pay stubs", instruction: 'Photos are fine. All three, even if one is a partial month.', kind: 'document', required: true },
+                        { label: "Last 2 months' bank statements", instruction: 'Every page, including the blank ones — lenders check for gaps.', kind: 'document', required: true },
+                        { label: 'Annual gross income', instruction: "Before tax. A rough figure is fine; we'll check it against the pay stubs.", kind: 'answer', dataType: 'currency', required: true },
+                        { label: 'Purchase price target', instruction: 'A range is fine.', kind: 'answer', dataType: 'currency', required: false },
+                      ]}
+                    />
+                  )}
+                  {name === 'CadenceTimeline' && (
+                    <CadenceTimeline
+                      rule="Standard schedule · 09:00 in the client's own timezone · weekends skipped"
+                      stops={[
+                        { day: 0, channel: 'email' },
+                        { day: 3, channel: 'email' },
+                        { day: 6, channel: 'email' },
+                        { day: 10, channel: 'sms' },
+                        { day: 14, channel: 'person' },
+                      ]}
+                      sentence="Alan would hear from you on day 3 and 6 by email, day 10 by SMS, once more on day 14, then it stops and comes to you."
+                    />
+                  )}
+                </div>
+                <div class="reference">
+                  <p class="eyebrow tag">Design system · {theme}</p>
+                  <iframe
+                    src={`/dev/reference/${name}/${theme}.html`}
+                    title={`${name} design-system preview, ${theme}`}
+                    style={`height: ${height}px`}
+                    loading="lazy"
+                    tabindex="-1"
+                  />
+                </div>
+              </div>
+            ))}
+          </section>
+        );
+      })
+    }
+  </div>
+</Base>
+
+<style>
+  .sink {
+    max-width: var(--width-page);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6) var(--space-24);
+  }
+  .intro .lede {
+    margin-top: var(--space-4);
+    color: var(--ink-muted);
+  }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+  }
+  .component {
+    margin-top: var(--space-16);
+    scroll-margin-top: var(--space-4);
+  }
+  .component h2 {
+    margin: 0 0 var(--space-4);
+  }
+  .meta {
+    color: var(--ink-subtle);
+  }
+  .pair {
+    margin-top: var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .panel {
+    padding: var(--space-6);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .reference {
+    border-top: 1px dashed var(--rule-strong);
+    background: var(--paper-sunken);
+  }
+  .reference .tag {
+    padding: var(--space-2) var(--space-6) 0;
+  }
+  .tag {
+    margin: 0 0 var(--space-4);
+    color: var(--ink-subtle);
+  }
+  iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .stack > * + * {
+    margin-top: var(--space-4);
+  }
+  @media (max-width: 720px) {
+    .sink {
+      padding: var(--space-8) var(--space-4) var(--space-16);
+    }
+    .panel {
+      padding: var(--space-4);
+    }
+  }
+</style>

@@ -9,16 +9,18 @@ interface Props {
   links: { label: string; href: string }[];
   signUpUrl: string;
   signInUrl: string;
+  /** Only needed when more than one Nav is on a page (the kitchen sink). */
+  menuId?: string;
 }
-const { links, signUpUrl, signInUrl } = Astro.props;
+const { links, signUpUrl, signInUrl, menuId = 'nav-menu' } = Astro.props;
 const here = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <header class="nav-wrap">
   <nav class="nav" aria-label="Main">
     <Wordmark />
-    <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
-    <div class="menu" id="nav-menu">
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls={menuId}>Menu</button>
+    <div class="menu" id={menuId}>
       <ul class="links">
         {
           links.map((l) => (

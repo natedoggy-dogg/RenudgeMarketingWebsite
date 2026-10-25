@@ -1,0 +1,17 @@
+---
+// The highlighter: marks a value the agent pulled out of a client's message.
+// Only ever on extracted values, never for emphasis.
+---
+
+<mark class="highlight"><slot /></mark>
+
+<style>
+  .highlight {
+    background: var(--highlight);
+    color: var(--ink);
+    padding: 0 0.18em;
+    border-radius: 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+// The chasing schedule as a day track, plus the plain-English sentence the
+// product uses. Stops must match the planner's real default cadence (via
+// claims.json), and the eyebrow states the send time and timezone rule.
+// Outline dot: email. Filled: SMS. Warning: handed to a person.
+export interface CadenceStop {
+  day: number;
+  channel: 'email' | 'sms' | 'person';
+}
+interface Props {
+  rule: string;
+  stops: CadenceStop[];
+  sentence: string;
+}
+const { rule, stops, sentence } = Astro.props;
+const sorted = [...stops].sort((a, b) => a.day - b.day);
+const days = (sorted.at(-1)?.day ?? 0) + 1;
+const word = { email: 'email', sms: 'SMS', person: 'to you' } as const;
+---
+
+<figure class="cadence">
+  <figcaption class="eyebrow">{rule}</figcaption>
+  <ol class="track" style={`--days: ${days}`}>
+    {
+      sorted.map((s) => (
+        <li class:list={['stop', s.channel]} style={`--col: ${s.day + 1}`}>
+          <i aria-hidden="true" />
+          <span>
+            Day {s.day} · {word[s.channel]}
+          </span>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="sentence">{sentence}</p>
+</figure>
+
+<style>
+  .cadence {
+    margin: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+  }
+  .eyebrow {
+    color: var(--ink-subtle);
+  }
+  .track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+    margin: var(--space-6) 0 var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+  .track::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 7px;
+    height: 1px;
+    background: var(--rule-strong);
+  }
+  .stop {
+    grid-row: 1;
+    grid-column: var(--col);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .stop i {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--paper-raised);
+    border: 2px solid var(--nudge);
+  }
+  .sms i {
+    background: var(--nudge);
+  }
+  .person i {
+    border-color: var(--warning);
+    background: var(--warning-wash);
+  }
+  /* The last stop sits at the end of the track, so its label reads leftward
+     instead of running out of the card. */
+  .stop:last-child {
+    align-items: flex-end;
+    grid-column: var(--col) / span 1;
+    justify-self: end;
+  }
+  .stop span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 15px;
+    color: var(--ink-subtle);
+    white-space: nowrap;
+  }
+  .sentence {
+    margin: 0;
+    padding: 12px 14px;
+    background: var(--paper-sunken);
+    border-radius: var(--radius-control);
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--ink);
+  }
+  /* On narrow screens the labels can't share one line: run the track down. */
+  @media (max-width: 720px) {
+    .cadence {
+      padding: var(--space-4);
+    }
+    .track {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .track::before {
+      left: 7px;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      height: auto;
+    }
+    .stop,
+    .stop:last-child {
+      flex-direction: row;
+      align-items: center;
+      justify-self: start;
+      gap: var(--space-3);
+    }
+  }
+</style>

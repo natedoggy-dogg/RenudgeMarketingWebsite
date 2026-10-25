@@ -1,0 +1,12 @@
+---
+// Renders MarkedText, wrapping each extracted span in Highlight.
+import Highlight from './Highlight.astro';
+import type { MarkedText } from '../types';
+
+interface Props {
+  text: MarkedText;
+}
+const { text } = Astro.props;
+---
+
+{text.map((part) => (typeof part === 'string' ? part : <Highlight>{part.mark}</Highlight>))}

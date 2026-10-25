@@ -1,0 +1,109 @@
+---
+// A window for dashboard mockups: the app URL, the real sidebar and a main
+// area. Light in both themes, because the product has no dark mode. Crop to
+// the part that proves the point. Main-area content goes in the slot, built
+// from product-* tokens and type styles (see ProductTable).
+import { APP_HOST, PRODUCT_NAV, type ProductNavItem } from '../../config/product';
+
+interface Props {
+  path: string;
+  active: ProductNavItem;
+  label: string;
+}
+const { path, active, label } = Astro.props;
+---
+
+<figure class="frame" aria-label={label}>
+  <div class="bar"><span class="url">{APP_HOST}{path}</span></div>
+  <div class="body">
+    <div class="side" aria-hidden="true">
+      {PRODUCT_NAV.map((n) => <span class:list={['nav', n === active && 'on']}>{n}</span>)}
+    </div>
+    <div class="main">
+      <slot />
+    </div>
+  </div>
+</figure>
+
+<style>
+  .frame {
+    margin: 0;
+    background: var(--product-surface);
+    color: var(--product-ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-frame);
+    overflow: hidden;
+    font-family: var(--font-product);
+  }
+  .bar {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--product-border);
+    background: var(--product-sidebar);
+  }
+  .url {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 16px;
+    color: var(--product-muted);
+    padding: 2px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--product-surface);
+    border: 1px solid var(--product-border);
+  }
+  .body {
+    display: grid;
+    grid-template-columns: 168px minmax(0, 1fr);
+    min-height: 220px;
+  }
+  .side {
+    background: var(--product-sidebar);
+    border-right: 1px solid var(--product-border);
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--product-muted);
+  }
+  .nav {
+    padding: 6px 10px;
+    border-radius: var(--radius-control);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--product-border);
+  }
+  .on {
+    background: var(--product-accent);
+    color: var(--product-primary);
+    font-weight: 600;
+  }
+  .on::before {
+    background: var(--product-primary);
+  }
+  .main {
+    padding: 14px 20px;
+    min-width: 0;
+  }
+  @media (max-width: 720px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .side {
+      display: none;
+    }
+    .main {
+      overflow-x: auto;
+    }
+  }
+</style>

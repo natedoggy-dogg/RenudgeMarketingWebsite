@@ -1,0 +1,27 @@
+---
+// The third action in a row, after the primary and secondary buttons. May end
+// in "→".
+interface Props {
+  href: string;
+  onNight?: boolean;
+}
+const { href, onNight = false } = Astro.props;
+---
+
+<a class:list={['link', onNight && 'on-night']} href={href}><slot /></a>
+
+<style>
+  .link {
+    color: var(--nudge-deep);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .link:hover {
+    text-decoration-thickness: 2px;
+  }
+  .on-night {
+    color: var(--on-night);
+  }
+</style>

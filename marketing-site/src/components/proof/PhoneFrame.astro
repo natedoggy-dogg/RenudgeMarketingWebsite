@@ -1,0 +1,206 @@
+---
+// A phone holding a white-labelled client page: what the client sees, so
+// renudge.it never appears inside it. Always a fictional operator. Long lists
+// use the product's treatment: done items collapsed into one row, one raised
+// "next up" card, the rest quiet.
+import { OPERATORS, type OperatorKey } from '../../config/product';
+
+interface Task {
+  state: 'done' | 'next' | 'later';
+  title: string;
+  note?: string;
+  /** Button label on the next-up card, e.g. "Upload ›". */
+  action?: string;
+}
+interface Props {
+  operator: OperatorKey;
+  headline: string;
+  summary: string;
+  progress: { done: number; total: number };
+  tasks: Task[];
+  label: string;
+}
+const { operator, headline, summary, progress, tasks, label } = Astro.props;
+const op = OPERATORS[operator];
+const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
+---
+
+<figure class:list={['phone', `accent-${op.accent}`]} aria-label={label}>
+  <div class="screen">
+    <div class="card">
+      <div class="head">
+        <div class="op"><i aria-hidden="true">{op.initials}</i>{op.name}</div>
+        <div class="h1">{headline}</div>
+        <div class="sum">{summary}</div>
+        <div class="prog">
+          <b style={`--pct: ${pct}%`}></b>{progress.done} of {progress.total} done
+        </div>
+      </div>
+      <ul class="tasks">
+        {
+          tasks.map((t) => (
+            <li class:list={['task', t.state]}>
+              <span class="dot" aria-hidden="true" />
+              <span class="t">
+                {t.title}
+                {t.note && <small>{t.note}</small>}
+              </span>
+              {t.action && <span class="go">{t.action}</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .phone {
+    margin: 0;
+    width: 300px;
+    max-width: 100%;
+    padding: 10px;
+    border-radius: var(--radius-device);
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-frame);
+  }
+  .accent-teal {
+    --accent: var(--operator-teal);
+  }
+  .accent-berry {
+    --accent: var(--operator-berry);
+  }
+  .screen {
+    border-radius: 28px;
+    background: var(--product-chip);
+    overflow: hidden;
+    padding: 18px 12px 20px;
+    font-family: var(--font-product);
+    color: var(--product-ink);
+  }
+  .card {
+    background: var(--product-surface);
+    border: 1px solid var(--product-border);
+    border-radius: var(--radius-sheet);
+    overflow: hidden;
+  }
+  .head {
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--product-border);
+  }
+  .op {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .op i {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: inline-grid;
+    place-items: center;
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--product-surface);
+    background: var(--accent);
+  }
+  .h1 {
+    margin-top: 12px;
+    font-size: 19px;
+    line-height: 24px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
+  .sum {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--product-muted);
+  }
+  .prog {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--product-muted);
+  }
+  .prog b {
+    flex: 1;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--product-chip);
+    position: relative;
+    overflow: hidden;
+  }
+  .prog b::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--pct);
+    background: var(--accent);
+  }
+  .tasks {
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+  }
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .next {
+    border: 1px solid var(--accent);
+    box-shadow: var(--shadow-raise);
+  }
+  .t {
+    flex: 1;
+    font-weight: 600;
+  }
+  .t small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--product-muted);
+  }
+  .go {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--product-surface);
+    background: var(--accent);
+    padding: 7px 11px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .done {
+    color: var(--product-muted);
+  }
+  .done .t {
+    text-decoration: line-through;
+    font-weight: 500;
+  }
+  .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px dashed var(--accent);
+    flex: none;
+  }
+  .done .dot {
+    border: 0;
+    background: var(--product-success-wash);
+  }
+  .later .dot {
+    border: 2px solid var(--product-border);
+  }
+</style>

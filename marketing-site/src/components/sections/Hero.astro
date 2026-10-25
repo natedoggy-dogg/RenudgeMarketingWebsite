@@ -1,0 +1,96 @@
+---
+// The top of every page: who it's for, one display-xl headline (≤ 8 words), a
+// lede, primary and secondary buttons and one reassurance line that is true on
+// the day it ships. An optional visual goes in the `visual` slot: beside the
+// text on desktop, after the buttons on mobile.
+import Button from '../actions/Button.astro';
+import type { Cta } from '../types';
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  lede: string;
+  primary: Cta;
+  secondary?: Cta;
+  reassurance?: string;
+}
+const { eyebrow, headline, lede, primary, secondary, reassurance } = Astro.props;
+const hasVisual = Astro.slots.has('visual');
+---
+
+<header class:list={['hero', hasVisual && 'with-visual']}>
+  <div class="text">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{headline}</h1>
+    <p class="lede">{lede}</p>
+    <div class="actions">
+      <Button href={primary.href}>{primary.label}</Button>
+      {secondary && <Button href={secondary.href} variant="secondary">{secondary.label}</Button>}
+    </div>
+    {reassurance && <p class="reassure">{reassurance}</p>}
+  </div>
+  {
+    hasVisual && (
+      <div class="visual">
+        <slot name="visual" />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--space-12);
+  }
+  .with-visual {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+  }
+  /* width-hero-text includes the page gutters, as in the design system. */
+  .text {
+    max-width: calc(var(--width-hero-text) - 2 * var(--space-6));
+  }
+  p,
+  h1 {
+    margin: 0;
+  }
+  .eyebrow {
+    color: var(--ink-subtle);
+  }
+  h1 {
+    margin-top: var(--space-4);
+    font-family: var(--font-display);
+    font-size: 72px;
+    line-height: 76px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .lede {
+    margin-top: var(--space-6);
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  .reassure {
+    margin-top: var(--space-3);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-subtle);
+  }
+  @media (max-width: 720px) {
+    .with-visual {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    h1 {
+      font-size: 44px;
+      line-height: 48px;
+    }
+  }
+</style>

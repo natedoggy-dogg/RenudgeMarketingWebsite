@@ -1,0 +1,63 @@
+---
+// A state in one of four tones. Labels are the product's own state words
+// ("complete", "waiting on you", "stalled", "chasing"); always a word, never
+// colour alone. Inside ProductFrame pass `product` so it uses the fixed
+// product tokens and type.
+export type BadgeTone = 'success' | 'warning' | 'destructive' | 'neutral';
+interface Props {
+  label: string;
+  tone: BadgeTone;
+  product?: boolean;
+}
+const { label, tone, product = false } = Astro.props;
+---
+
+<span class:list={['badge', tone, product && 'product']}>{label}</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 1px 9px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .success {
+    background: var(--success-wash);
+    color: var(--success);
+  }
+  .warning {
+    background: var(--warning-wash);
+    color: var(--warning);
+  }
+  .destructive {
+    background: var(--destructive-wash);
+    color: var(--destructive);
+  }
+  .neutral {
+    background: var(--paper-sunken);
+    color: var(--ink-muted);
+  }
+  .product {
+    font-family: var(--font-product);
+    font-size: 11px;
+    line-height: 16px;
+    padding: 1px 8px;
+  }
+  .product.success {
+    background: var(--product-success-wash);
+    color: var(--product-success);
+  }
+  .product.warning {
+    background: var(--product-warning-wash);
+    color: var(--product-warning);
+  }
+  .product.neutral {
+    background: var(--product-chip);
+    color: var(--product-muted);
+  }
+</style>

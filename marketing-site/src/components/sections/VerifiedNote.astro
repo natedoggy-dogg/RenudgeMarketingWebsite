@@ -1,0 +1,42 @@
+---
+// Opens every comparison table: when it was last checked, against what, and
+// an honest concession. Bordered on all four sides; never a coloured left
+// border.
+interface Props {
+  verifiedAt: Date;
+  source: string;
+  note: string;
+}
+const { verifiedAt, source, note } = Astro.props;
+const date = verifiedAt.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+
+<aside class="verified">
+  <div class="eyebrow meta-row">
+    <span>Last verified <time datetime={verifiedAt.toISOString().slice(0, 10)}>{date}</time></span>
+    <span>Source: {source}</span>
+  </div>
+  <p>{note}</p>
+</aside>
+
+<style>
+  .verified {
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-card);
+    padding: var(--space-4) var(--space-6);
+    background: var(--paper-raised);
+    max-width: var(--width-prose);
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    color: var(--ink-subtle);
+  }
+  p {
+    margin: var(--space-2) 0 0;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--ink);
+  }
+</style>

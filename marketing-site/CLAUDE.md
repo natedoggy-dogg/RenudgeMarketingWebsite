@@ -6,6 +6,7 @@ The public website for renudge.it: Astro, static output, served by the `renudge-
 
 - `design/README.md` (copied from the design system) is the brand book. Its rules on colour, the highlighter, product mockups and voice are binding.
 - `design/tokens.json` is the only source of design values. `src/styles/tokens.css` is generated from it (and gitignored), so don't edit it by hand.
+- Use plain class names in scoped component styles, but not ones that are also Tailwind utilities (`table`, `hidden`, `flex`, `grid`, `border`…): Tailwind generates those globally and they'll win.
 - Tailwind utilities come from the tokens only; the default palette is switched off. Colours drop nothing (`bg-paper`, `text-ink-muted`, `bg-product-surface`), spacing, radius and shadow drop their prefix (`p-6`, `rounded-card`, `shadow-frame`), and layout widths keep the full name (`max-w-width-prose`) because Tailwind's own `max-w-prose` is 65ch. Type styles are plain classes named after the token (`display-xl`, `lede`, `eyebrow`). The design system's 720px switch is the `desktop:` / `max-desktop:` breakpoint.
 - `docs/source/` holds the copy draft, personas, use cases and product docs.
 
@@ -15,7 +16,9 @@ The public website for renudge.it: Astro, static output, served by the `renudge-
 | --- | --- |
 | `src/content/` | MDX collections (pages, templates, verticals, comparisons, tools, guides, customers) and their Zod schemas in `config.ts` |
 | `src/data/` | `pricing.json`, `claims.json`, `integrations.json`, `redirects.json`, `nav.json` |
-| `src/components/` | Ported design-system components: `brand/`, `sections/`, `proof/`, `labels/`, `actions/`, plus React `islands/` |
+| `src/components/` | Ported design-system components: `brand/`, `sections/`, `proof/`, `labels/`, `actions/`, plus React `islands/`. Props follow each component's "Consumer provides" in `design/components/*/README.md`; shared shapes are in `types.ts`. |
+| `src/config/product.ts` | Product facts mockups depend on: the dashboard sidebar labels and the two fictional operators |
+| `src/dev-pages/` | Kitchen sink (`/dev/components`, each port above the design system's own preview), `/dev/tokens`, `/dev/layout`. Routed in dev and staging only, never in the sitemap. |
 | `src/config/site.ts` | `SITE_NAME`, site and app URLs, `signUpUrl()` |
 | `src/layouts/Base.astro` | Head tags, fonts, skip link, nav and footer. JSON-LD goes in its `jsonld` slot. |
 | `src/lib/library.ts` | The only way to read the task library (`@library`). Template items, counts and client wording come from here. |

@@ -1,0 +1,95 @@
+---
+// The follow-up as a letter-style timeline. Mix channels; keep a sender label
+// on every turn; end on a system event that shows judgement. Three to five
+// turns, in order, nudges at 09:00 client time.
+import Chip from '../labels/Chip.astro';
+import MarkedText from './MarkedText.astro';
+import type { MarkedText as Marked } from '../types';
+
+export type Turn =
+  | { time: string; channel: string; sender: string; message: string | Marked }
+  | { system: string };
+interface Props {
+  turns: Turn[];
+  label?: string;
+}
+const { turns, label = 'Message thread' } = Astro.props;
+---
+
+<ol class="thread" aria-label={label}>
+  {
+    turns.map((t) =>
+      'system' in t ? (
+        <li class="turn system">{t.system}</li>
+      ) : (
+        <li class="turn">
+          <div class="margin">
+            <div class="when">{t.time}</div>
+            <Chip label={t.channel} />
+          </div>
+          <div>
+            <div class="who">{t.sender}</div>
+            <p class="msg">{typeof t.message === 'string' ? t.message : <MarkedText text={t.message} />}</p>
+          </div>
+        </li>
+      ),
+    )
+  }
+</ol>
+
+<style>
+  .thread {
+    max-width: 560px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .turn {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    column-gap: var(--space-6);
+  }
+  .turn:first-child {
+    border-top: 0;
+  }
+  .when {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--ink-subtle);
+  }
+  .who {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+  .msg {
+    margin: var(--space-1) 0 0;
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .system {
+    grid-template-columns: 1fr;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ink-muted);
+  }
+  @media (max-width: 720px) {
+    .turn {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .margin {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+  }
+</style>
