@@ -1,0 +1,17 @@
+{
+  "header": [
+    { "label": "Product", "href": "/product" },
+    { "label": "Templates", "href": "/templates" },
+    { "label": "Pricing", "href": "/pricing" },
+    { "label": "Security", "href": "/security" }
+  ],
+  "footer": [
+    { "label": "Product", "href": "/product" },
+    { "label": "Templates", "href": "/templates" },
+    { "label": "Pricing", "href": "/pricing" },
+    { "label": "Security", "href": "/security" },
+    { "label": "Privacy", "href": "/privacy" },
+    { "label": "Terms", "href": "/terms" },
+    { "label": "Cookies", "href": "/cookies" }
+  ]
+}

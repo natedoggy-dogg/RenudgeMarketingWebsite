@@ -1,0 +1,47 @@
+---
+// The wordmark, set in type per the dashboard spec. Small in the nav and
+// footer; large only on the 404 page and social cards.
+interface Props {
+  href?: string;
+  size?: 'sm' | 'lg';
+}
+const { href = '/', size = 'sm' } = Astro.props;
+---
+
+<a class:list={['wordmark', size === 'lg' && 'lg']} href={href} aria-label="reNudge it, home">
+  <span class="square" aria-hidden="true"></span>reNudge<span class="it">&nbsp;it</span>
+</a>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-product);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .square {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: var(--nudge);
+  }
+  .it {
+    font-weight: 400;
+    color: var(--ink-subtle);
+  }
+  .lg {
+    font-size: 30px;
+    gap: 12px;
+  }
+  .lg .square {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+</style>

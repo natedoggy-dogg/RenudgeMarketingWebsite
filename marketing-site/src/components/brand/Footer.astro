@@ -1,0 +1,74 @@
+---
+import Wordmark from './Wordmark.astro';
+
+interface Props {
+  links: { label: string; href: string }[];
+  signInUrl: string;
+}
+const { links, signInUrl } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="inner">
+    <Wordmark />
+    <nav aria-label="Footer">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))
+        }
+        <li><a href={signInUrl}>Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    max-width: var(--width-page);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6);
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  a:not(:global(.wordmark)) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-muted);
+    font-size: 15px;
+    line-height: 20px;
+    text-decoration: none;
+  }
+  a:not(:global(.wordmark)):hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .inner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--space-8) var(--space-4);
+    }
+  }
+</style>

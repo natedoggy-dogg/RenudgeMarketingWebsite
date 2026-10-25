@@ -1,0 +1,89 @@
+---
+// Every page goes through this layout: head tags, fonts, skip link, nav and
+// footer. JSON-LD goes in the `jsonld` slot:
+//   <script slot="jsonld" type="application/ld+json" set:html={JSON.stringify(data)} />
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource/instrument-sans/400.css';
+import '@fontsource/instrument-sans/500.css';
+import '@fontsource/instrument-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+
+// Preload only what's above the fold on every page: the display face and the
+// sans at the body and button weights. The rest swap in.
+import displayFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import sansRegular from '@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2?url';
+import sansSemibold from '@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2?url';
+
+import tokens from '../../design/tokens.json';
+import nav from '../data/nav.json';
+import Nav from '../components/brand/Nav.astro';
+import Footer from '../components/brand/Footer.astro';
+import { APP_URL, SITE_LANG, SITE_NAME, signUpUrl } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute URL or site path. Defaults to an OG image endpoint (step 0.8). */
+  ogImage?: string;
+  noindex?: boolean;
+  /** Template pages preload the template on sign-up. */
+  libraryTemplateId?: string;
+}
+
+const { title, description, ogImage, noindex = false, libraryTemplateId } = Astro.props;
+
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href;
+const image = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+
+const paper = tokens.color.tokens.find((t) => t.name === 'paper')?.value;
+if (!paper || typeof paper === 'string') throw new Error('tokens.json: paper must have light and dark values');
+
+const startUrl = signUpUrl(libraryTemplateId);
+---
+
+<!doctype html>
+<html lang={SITE_LANG}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={paper.light} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={paper.dark} />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansRegular} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansSemibold} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content={SITE_LANG.replace('-', '_')} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {image && <meta name="twitter:image" content={image} />}
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <slot name="head" />
+    <slot name="jsonld" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav links={nav.header} signUpUrl={startUrl} signInUrl={APP_URL} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer links={nav.footer} signInUrl={APP_URL} />
+  </body>
+</html>

@@ -18,6 +18,9 @@ const OUTPUT = `${ROOT}src/styles/tokens.css`;
 // The design system switches type sizes and stacks layouts at this width
 // (design/components/bundle.css).
 const MOBILE_MAX_WIDTH = '720px';
+// The same switch as a Tailwind breakpoint: `desktop:` applies above 720px,
+// `max-desktop:` at 720px and below. In rem so it sorts with Tailwind's own.
+const DESKTOP_MIN_WIDTH = `${(parseInt(MOBILE_MAX_WIDTH) + 1) / 16}rem`;
 
 // Self-hosted Fontsource families, put first in each stack. Fontsource names
 // variable fonts "<Family> Variable".
@@ -206,6 +209,7 @@ export function buildCss(input: unknown): string {
     '  --radius-*: initial;',
     '  --shadow-*: initial;',
     '  --container-*: initial;',
+    `  --breakpoint-desktop: ${DESKTOP_MIN_WIDTH};`,
     '  --color-white: #fff;',
     '  --color-transparent: transparent;',
     '  --color-current: currentColor;',

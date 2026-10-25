@@ -1,0 +1,39 @@
+---
+// Dev-only check of the base layout: head tags, fonts, focus ring and widths.
+import Base from '../../layouts/Base.astro';
+import Button from '../../components/actions/Button.astro';
+
+const jsonld = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Layout test' };
+---
+
+<Base title="Layout test" description="A test page for the base layout." noindex>
+  <script slot="jsonld" type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+
+  <section class="mx-auto max-w-width-page px-6 pt-32 pb-24 max-desktop:px-4 max-desktop:pt-16 max-desktop:pb-16">
+    <div class="max-w-width-hero-text">
+      <p class="eyebrow text-ink-subtle">For mortgage brokers and bookkeepers</p>
+      <h1 class="display-xl mt-4">Stop chasing clients for paperwork.</h1>
+      <p class="lede mt-6 max-w-[60ch] text-ink-muted">
+        renudge.it follows up by email, text and chat until your clients send what you need.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <Button href="#">Start free</Button>
+        <Button href="#" variant="secondary">See how it works</Button>
+      </div>
+      <p class="small mt-3 text-ink-subtle">No credit card required.</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-width-page border-t border-rule px-6 py-24 max-desktop:px-4 max-desktop:py-16">
+    <p class="eyebrow text-ink-subtle">Layout test</p>
+    <h2 class="display-m mt-4">Every open request is a business you're not closing.</h2>
+    <div class="mt-6 max-w-width-prose">
+      <p class="body">
+        It's not that clients don't want to help. They get busy, they get confused, they forget. A long unbroken
+        string to test wrapping at 360px: Supercalifragilisticexpialidocious-document-checklist-v2-final.pdf
+      </p>
+      <p class="body mt-4"><a href="#">An inline link in running copy</a> and <a href="#">another one</a>.</p>
+      <p class="meta mt-4 text-ink-subtle">Tue 09:00 · SMS · opened</p>
+    </div>
+  </section>
+</Base>

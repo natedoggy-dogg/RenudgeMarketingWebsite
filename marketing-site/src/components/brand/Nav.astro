@@ -1,0 +1,167 @@
+---
+// Site header: wordmark, at most four links, a quiet "Sign in" and the one
+// primary "Start free". Below 720px the links collapse into a menu button;
+// "Start free" stays visible.
+import Wordmark from './Wordmark.astro';
+import Button from '../actions/Button.astro';
+
+interface Props {
+  links: { label: string; href: string }[];
+  signUpUrl: string;
+  signInUrl: string;
+}
+const { links, signUpUrl, signInUrl } = Astro.props;
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="nav-wrap">
+  <nav class="nav" aria-label="Main">
+    <Wordmark />
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    <div class="menu" id="nav-menu">
+      <ul class="links">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={here === l.href ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="signin" href={signInUrl}>Sign in</a>
+    </div>
+    <Button href={signUpUrl} class="start">Start free</Button>
+  </nav>
+</header>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.menu-button')) {
+    const menu = document.getElementById(button.getAttribute('aria-controls') ?? '');
+    if (!menu) continue;
+    const set = (open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      menu.dataset.open = String(open);
+    };
+    button.addEventListener('click', () => set(button.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
+        set(false);
+        button.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .nav-wrap {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    max-width: var(--width-page);
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-6);
+  }
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    flex: 1;
+  }
+  .links {
+    display: flex;
+    gap: var(--space-6);
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a,
+  .signin {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .links a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+  .links a:hover,
+  .links a[aria-current='page'] {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .signin {
+    color: var(--ink-muted);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .signin:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .menu-button {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .nav {
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+    }
+    .nav > :global(.wordmark) {
+      margin-right: auto;
+    }
+    .menu-button {
+      display: inline-flex;
+      align-items: center;
+      order: 1;
+      min-height: 44px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--rule-strong);
+      border-radius: var(--radius-control);
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .nav > :global(.start) {
+      order: 2;
+    }
+    .menu {
+      display: none;
+      order: 3;
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-bottom: var(--space-2);
+    }
+    .menu[data-open='true'] {
+      display: flex;
+    }
+    .links {
+      flex-direction: column;
+      gap: 0;
+    }
+    .links a,
+    .signin {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      border-top: 1px solid var(--rule);
+    }
+  }
+</style>

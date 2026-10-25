@@ -1,0 +1,57 @@
+---
+// One primary per view; the secondary sits to its right. Verb first, sentence
+// case, no arrows. Use `onNight` for a secondary on the night band.
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  onNight?: boolean;
+  class?: string;
+}
+const { href, variant = 'primary', onNight = false, class: className } = Astro.props;
+---
+
+<a class:list={['btn', variant, onNight && 'on-night', className]} href={href}><slot /></a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: var(--radius-control);
+    border: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .primary {
+    background: var(--nudge);
+    color: var(--on-nudge);
+  }
+  .primary:hover {
+    background: var(--nudge-deep);
+  }
+  .secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .secondary:hover {
+    background: var(--paper-sunken);
+  }
+  .on-night.secondary {
+    color: var(--on-night);
+    border-color: var(--on-night);
+  }
+  .on-night.secondary:hover {
+    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
