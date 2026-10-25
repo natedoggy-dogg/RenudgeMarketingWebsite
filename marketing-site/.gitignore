@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.env
+.env.*
+!.env.example
+
+# Internal product docs. This repo is public until the site moves into the
+# product monorepo, so keep them local. Remove this line after the move.
+docs/source/
