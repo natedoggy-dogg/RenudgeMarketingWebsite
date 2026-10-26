@@ -1,0 +1,4 @@
+{
+  "rule": "The base tree passes, in dev and production",
+  "expect": null
+}

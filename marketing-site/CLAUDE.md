@@ -14,7 +14,8 @@ The public website for renudge.it: Astro, static output, served by the `renudge-
 
 | Path | What |
 | --- | --- |
-| `src/content/` | MDX collections (pages, templates, verticals, comparisons, tools, guides, customers) and their Zod schemas in `config.ts` |
+| `src/content/` | MDX collections (pages, templates, verticals, comparisons, tools, guides, customers). Schemas and their rules are in `src/content.config.ts` (Astro 7 location). Query through `src/lib/content.ts` where a rule applies at render time. |
+| `tests/content-fixtures/` | One failing (or passing) example per schema rule, run by `npm run test:content`. Never part of the site. |
 | `src/data/` | `pricing.json`, `claims.json`, `integrations.json`, `redirects.json`, `nav.json` |
 | `src/components/` | Ported design-system components: `brand/`, `sections/`, `proof/`, `labels/`, `actions/`, plus React `islands/`. Props follow each component's "Consumer provides" in `design/components/*/README.md`; shared shapes are in `types.ts`. |
 | `src/config/product.ts` | Product facts mockups depend on: the dashboard sidebar labels and the two fictional operators |
@@ -61,7 +62,7 @@ Fill these in once Phase 0 is built:
 - dev: `npm run dev` (Node 24, see `.nvmrc`)
 - build: `npm run build` (type check, then `astro build`)
 - tokens: `npm run tokens` (runs automatically before `dev` and `build`)
-- tests: `npm test`
+- tests: `npm test` (scripts) and `npm run test:content` (one fixture per content rule, about a minute)
 - checks:
 - preview the Worker locally:
 - deploy staging: CI on push to `main`

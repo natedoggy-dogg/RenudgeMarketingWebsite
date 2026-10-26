@@ -1,0 +1,4 @@
+{
+  "rule": "comparisons: fail past 180 days",
+  "expect": "must be re-verified within 180 days"
+}

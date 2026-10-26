@@ -1,0 +1,4 @@
+{
+  "rule": "customers: an unpublished draft may lack both",
+  "expect": null
+}

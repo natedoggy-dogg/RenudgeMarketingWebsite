@@ -1,0 +1,7 @@
+{
+  "rule": "Complete pricing passes a production build",
+  "expect": null,
+  "env": {
+    "PUBLIC_ENV": "production"
+  }
+}

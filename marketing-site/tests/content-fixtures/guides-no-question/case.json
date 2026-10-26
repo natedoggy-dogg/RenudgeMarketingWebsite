@@ -1,0 +1,4 @@
+{
+  "rule": "guides: question required",
+  "expect": "question"
+}

@@ -1,0 +1,36 @@
+{
+  "currency": "USD",
+  "plans": [
+    {
+      "id": "solo",
+      "name": "Solo",
+      "monthlyBase": null,
+      "includedActiveRequests": null,
+      "overagePerRequest": null,
+      "teamMembers": 1,
+      "cta": { "label": "Start free", "kind": "signup" }
+    },
+    {
+      "id": "practice",
+      "name": "Practice",
+      "monthlyBase": null,
+      "includedActiveRequests": null,
+      "overagePerRequest": null,
+      "teamMembers": null,
+      "recommended": true,
+      "cta": { "label": "Start free", "kind": "signup" }
+    },
+    {
+      "id": "firm",
+      "name": "Firm",
+      "monthlyBase": null,
+      "includedActiveRequests": null,
+      "overagePerRequest": null,
+      "teamMembers": "unlimited",
+      "cta": { "label": "Talk to us", "kind": "contact" }
+    }
+  ],
+  "sms": { "country": "US", "perSegment": null },
+  "dedicatedNumberMonthly": null,
+  "trialActiveRequests": null
+}

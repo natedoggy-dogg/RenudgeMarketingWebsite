@@ -1,0 +1,4 @@
+{
+  "rule": "verticals: only launch verticals on the homepage",
+  "expect": "only launch verticals may be linked from the homepage"
+}

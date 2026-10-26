@@ -1,0 +1,4 @@
+{
+  "rule": "comparisons: at least one source",
+  "expect": "a comparison needs at least one source"
+}

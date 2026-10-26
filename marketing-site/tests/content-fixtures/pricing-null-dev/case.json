@@ -1,0 +1,4 @@
+{
+  "rule": "pricing: null allowed outside production",
+  "expect": null
+}

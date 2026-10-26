@@ -1,0 +1,4 @@
+{
+  "rule": "tools: no gated field",
+  "expect": "free tools are never gated"
+}

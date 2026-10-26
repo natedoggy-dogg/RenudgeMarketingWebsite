@@ -1,0 +1,4 @@
+{
+  "rule": "claims: source is a repo path, library fact id or doc",
+  "expect": "source is \"repo:<path>\""
+}

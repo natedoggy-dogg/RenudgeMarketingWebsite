@@ -12,3 +12,4 @@ docs/source/
 
 # Generated from design/tokens.json by scripts/build-tokens.ts
 src/styles/tokens.css
+.content-fixtures/

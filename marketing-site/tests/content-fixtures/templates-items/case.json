@@ -1,0 +1,4 @@
+{
+  "rule": "templates: items are never stored in MDX",
+  "expect": "template items come from @library, never from MDX"
+}

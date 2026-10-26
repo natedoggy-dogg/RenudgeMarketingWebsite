@@ -1,0 +1,4 @@
+{
+  "rule": "pages: title \u2264 60 chars",
+  "expect": "title must be 60 characters or fewer"
+}

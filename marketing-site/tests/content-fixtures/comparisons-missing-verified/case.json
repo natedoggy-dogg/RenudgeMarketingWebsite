@@ -1,0 +1,4 @@
+{
+  "rule": "comparisons: lastVerified required",
+  "expect": "lastVerified"
+}

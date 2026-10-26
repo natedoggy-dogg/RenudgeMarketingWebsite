@@ -1,0 +1,4 @@
+{
+  "rule": "templates: libraryTemplateId must exist in @library",
+  "expect": "libraryTemplateId \"not-in-library\" isn't in @library"
+}

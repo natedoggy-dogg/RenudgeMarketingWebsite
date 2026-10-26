@@ -1,0 +1,4 @@
+{
+  "rule": "integrations: status is shipped | building | requested",
+  "expect": "status"
+}

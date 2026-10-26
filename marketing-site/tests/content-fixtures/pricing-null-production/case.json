@@ -1,0 +1,7 @@
+{
+  "rule": "pricing: null fails a production build",
+  "expect": "plans.0.monthlyBase: pricing is null",
+  "env": {
+    "PUBLIC_ENV": "production"
+  }
+}

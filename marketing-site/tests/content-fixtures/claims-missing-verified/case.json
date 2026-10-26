@@ -1,0 +1,4 @@
+{
+  "rule": "claims: verifiedAt required",
+  "expect": "verifiedAt"
+}

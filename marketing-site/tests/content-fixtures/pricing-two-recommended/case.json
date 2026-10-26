@@ -1,0 +1,4 @@
+{
+  "rule": "pricing: at most one recommended plan",
+  "expect": "at most one plan is recommended"
+}

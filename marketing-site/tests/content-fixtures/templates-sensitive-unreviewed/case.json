@@ -1,0 +1,4 @@
+{
+  "rule": "templates: published healthcare/legal/mortgage needs reviewedBy",
+  "expect": "mortgage templates need a practitioner review"
+}

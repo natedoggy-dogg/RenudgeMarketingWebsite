@@ -1,0 +1,4 @@
+{
+  "rule": "redirects: status is 301, 302, 307 or 308",
+  "expect": "status"
+}

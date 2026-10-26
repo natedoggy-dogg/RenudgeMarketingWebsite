@@ -1,0 +1,7 @@
+{
+  "rule": "templates: no library means no template can validate",
+  "expect": "isn't available",
+  "env": {
+    "LIBRARY_FIXTURE_IDS": null
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "rule": "guides: cluster tag required",
+  "expect": "cluster"
+}

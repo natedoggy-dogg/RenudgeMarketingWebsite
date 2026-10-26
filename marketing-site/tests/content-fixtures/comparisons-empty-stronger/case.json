@@ -1,0 +1,4 @@
+{
+  "rule": "comparisons: whereTheyreStronger non-empty",
+  "expect": "whereTheyreStronger can't be empty"
+}

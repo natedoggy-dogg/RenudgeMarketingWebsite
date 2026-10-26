@@ -9,12 +9,13 @@
     "tokens": "node scripts/build-tokens.ts",
     "predev": "npm run tokens",
     "dev": "astro dev",
-    "prebuild": "npm run tokens",
+    "prebuild": "npm run tokens && node -e \"require('node:fs').rmSync('node_modules/.astro/data-store.json', { force: true })\"",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
     "test": "node --test scripts/*.test.ts",
-    "astro": "astro"
+    "astro": "astro",
+    "test:content": "node scripts/check-content-fixtures.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.1",

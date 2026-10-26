@@ -1,0 +1,4 @@
+{
+  "rule": "customers: published needs permissionOnFile",
+  "expect": "needs written permission on file"
+}

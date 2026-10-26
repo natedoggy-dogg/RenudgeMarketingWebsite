@@ -1,0 +1,5 @@
+{
+  "rule": "comparisons: warn past 90 days",
+  "expect": null,
+  "warn": "last verified 116 days ago"
+}

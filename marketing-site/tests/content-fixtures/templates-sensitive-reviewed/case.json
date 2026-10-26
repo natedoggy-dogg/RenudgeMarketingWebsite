@@ -1,0 +1,4 @@
+{
+  "rule": "templates: a reviewed sensitive template may publish",
+  "expect": null
+}

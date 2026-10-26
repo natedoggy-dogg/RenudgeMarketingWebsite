@@ -1,0 +1,4 @@
+{
+  "rule": "customers: published needs whatTookAdjustment",
+  "expect": "needs whatTookAdjustment"
+}

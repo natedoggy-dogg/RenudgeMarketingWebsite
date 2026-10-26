@@ -1,0 +1,4 @@
+{
+  "rule": "tools: island must exist",
+  "expect": "no island at"
+}

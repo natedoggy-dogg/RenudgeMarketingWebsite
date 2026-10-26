@@ -1,0 +1,4 @@
+{
+  "rule": "redirects: no self-redirect",
+  "expect": "a redirect cannot point at itself"
+}
