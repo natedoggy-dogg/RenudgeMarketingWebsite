@@ -15,7 +15,8 @@
     "typecheck": "astro check",
     "test": "node --test scripts/*.test.ts",
     "astro": "astro",
-    "test:content": "node scripts/check-content-fixtures.ts"
+    "test:content": "node scripts/check-content-fixtures.ts",
+    "library": "node scripts/print-library.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.1",

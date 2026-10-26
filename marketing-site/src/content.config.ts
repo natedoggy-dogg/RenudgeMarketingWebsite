@@ -12,13 +12,16 @@ import { existsSync } from 'node:fs';
 import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { templateIdExists } from './lib/library-ids';
+import { libraryTemplateIds } from './lib/library-ids';
 
 const ROOT = process.env.CONTENT_ROOT ?? 'src';
 const CONTENT = `${ROOT}/content`;
 const DATA = `${ROOT}/data`;
 const isProduction = process.env.PUBLIC_ENV === 'production';
 const today = process.env.CONTENT_TODAY ? new Date(process.env.CONTENT_TODAY) : new Date();
+
+// Read once per sync. A string means the library couldn't be read.
+const libraryIds = await libraryTemplateIds();
 
 const DAY = 24 * 60 * 60 * 1000;
 const daysSince = (d: Date) => Math.floor((today.getTime() - d.getTime()) / DAY);
@@ -85,9 +88,14 @@ const templates = defineCollection({
     })
     .strict()
     .superRefine((t, ctx) => {
-      const found = templateIdExists(t.libraryTemplateId);
-      if (found !== true)
-        ctx.addIssue({ code: 'custom', path: ['libraryTemplateId'], message: found });
+      if (typeof libraryIds === 'string')
+        ctx.addIssue({ code: 'custom', path: ['libraryTemplateId'], message: libraryIds });
+      else if (!libraryIds.has(t.libraryTemplateId))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['libraryTemplateId'],
+          message: `libraryTemplateId "${t.libraryTemplateId}" isn't in @library`,
+        });
       if (t.published && SENSITIVE_VERTICALS.includes(t.vertical) && !t.reviewedBy)
         ctx.addIssue({
           code: 'custom',

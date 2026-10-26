@@ -22,7 +22,7 @@ The public website for renudge.it: Astro, static output, served by the `renudge-
 | `src/dev-pages/` | Kitchen sink (`/dev/components`, each port above the design system's own preview), `/dev/tokens`, `/dev/layout`. Routed in dev and staging only, never in the sitemap. |
 | `src/config/site.ts` | `SITE_NAME`, site and app URLs, `signUpUrl()` |
 | `src/layouts/Base.astro` | Head tags, fonts, skip link, nav and footer. JSON-LD goes in its `jsonld` slot. |
-| `src/lib/library.ts` | The only way to read the task library (`@library`). Template items, counts and client wording come from here. |
+| `src/lib/library.ts` | The only way to read the task library (`@library`). Template items, counts and client wording come from here. Its mapping from the library's exports (`fromLibrary`) is unwritten until `packages/library` is available. |
 | `src/lib/schema.ts` | JSON-LD builders |
 | `scripts/` | `build-tokens`, `check-placeholders`, `check-claims`, `check-links` |
 | `.claude/skills/` | Runbooks for every recurring job (below) |
@@ -62,6 +62,7 @@ Fill these in once Phase 0 is built:
 - dev: `npm run dev` (Node 24, see `.nvmrc`)
 - build: `npm run build` (type check, then `astro build`)
 - tokens: `npm run tokens` (runs automatically before `dev` and `build`)
+- library: `npm run library` (prints every template and its item count, and items with no client wording)
 - tests: `npm test` (scripts) and `npm run test:content` (one fixture per content rule, about a minute)
 - checks:
 - preview the Worker locally:
